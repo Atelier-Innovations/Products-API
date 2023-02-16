@@ -1,52 +1,36 @@
 import * as pg from 'pg';
+import * as copy from 'pg-copy-streams'
+const copyFrom = copy.from
 const { Pool } = pg;
 import dotenv from 'dotenv'
 dotenv.config()
-import fastcsv from 'fast-csv'
+
+// import * as fastcsv from '@fast-csv/parse';
 import fs from 'fs'
+
 
 const dbPW = process.env.dbPW;
 const dbPORT = process.env.dbPORT
-const stream = fs.createReadStream('./csvFiles/skus.csv')
-const csvData = [];
-const csvStream = fastcsv
-  .parse()
-  .on("data", function(data) {
-    csvData.push(data)
-  })
-  .on("end", function() {
-    csvData.shift();
 
 
-    const pool = new Pool({
-      user: 'bryce',
-      host: 'localhost',
-      database: 'products',
-      password: dbPW,
-      port: Number(dbPORT)
-    });
-
-    const query = "INSERT INTO skus(id, styleid, size, quantity) VALUES($1, $2, $3, $4)";
-
-    pool.connect((err, client, done) => {
-      if (err) throw err;
-
-      try {
-        csvData.forEach(row => {
-          client.query(query, row, (err, res) => {
-            if (err) {
-              console.log(err.stack);
-            } else {
-              console.log(res.rowCount)
-            }
-          })
-        })
-      } finally {
-        done();
-      }
-    })
-  });
+const pool = new Pool ({
+  user: 'bryce',
+  host: 'localhost',
+  database: 'products',
+  password: dbPW,
+  port: Number(dbPORT)
+});
 
 
+pool.connect((err, client, done) => {
+  client.query('CREATE TABLE IF NOT EXISTS skus(id INT PRIMARY KEY NOT NULL, styles_id INT, size VARCHAR(20), quantity VARCHAR(10), FOREIGN KEY (styles_id) REFERENCES styles(id))');
+  const streamSkus = client.query(copyFrom('COPY skus FROM STDIN CSV HEADER'));
+  const skusStream = fs.createReadStream('./csvFiles/skus.csv');
 
-  stream.pipe(csvStream);
+  skusStream.on('error', (err) => {console.log('onStart', err); done});
+  streamSkus.on('error', (err) => {console.log('middle', err); done});
+  streamSkus.on('finish', ()=> {console.log('finished'); done;});
+
+  skusStream.pipe(streamSkus).on('finish', done).on('error', done);
+})
+
