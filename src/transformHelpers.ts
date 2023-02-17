@@ -59,6 +59,15 @@ export const transformStylesRequest = (rows) => {
   }
 
 
-  console.log('stylesAndSkus', styles);
-  return styles
+  // console.log('stylesAndSkus', styles);
+  return styles;
+}
+
+
+export const transformRelated = (rows) => {
+  const related = [];
+  for (let i = 0; i < rows.length; i++) {
+    related.push(rows[i].related_product_id)
+  }
+  return related;
 }

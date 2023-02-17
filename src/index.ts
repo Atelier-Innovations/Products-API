@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { getFeatures, getProducts, getSkus, getStyles, getSingleProduct, getPhotos } from './queries'
+import { getFeatures, getProducts, getSkus, getStyles, getSingleProduct, getPhotos, getRelatedProducts } from './queries'
 
 dotenv.config();
 
@@ -16,15 +16,16 @@ app.get('/', (req:Request, res:Response) => {
 
 app.get('/products/:product_id', getSingleProduct);
 
-app.get('/products', getProducts);
-
-app.get('/skus', getSkus);
-
-app.get('/features', getFeatures);
-
 // errors when requesting product_id = [2, 100, 101]
 app.get('/products/:product_id/styles', getStyles)
 
+app.get('/products/:product_id/related', getRelatedProducts)
+
+
+
+app.get('/products', getProducts);
+app.get('/skus', getSkus);
+app.get('/features', getFeatures);
 app.get('/styles/photos', getPhotos)
 
 

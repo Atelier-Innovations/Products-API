@@ -2,7 +2,7 @@ import * as pg from 'pg';
 const { Pool } = pg;
 import dotenv from 'dotenv'
 import { Request, Response } from 'express';
-import { transformProductRequest, transformStylesRequest } from './transformHelpers';
+import { transformProductRequest, transformRelated, transformStylesRequest } from './transformHelpers';
 
 dotenv.config()
 
@@ -66,9 +66,18 @@ export const getSkus = (req: Request, res: Response) => {
 export const getPhotos = (req: Request, res: Response) => {
   pool.query('SELECT * FROM photos LIMIT 100')
     .then((results) => {
-      console.log(results.rows)
+      // console.log(results.rows)
       res.send(results.rows)
     })
     .catch((err) => {console.log(err)})
 }
 
+
+export const getRelatedProducts = (req: Request, res: Response) => {
+  pool.query(`SELECT related_product_id FROM related WHERE current_product_id = ${req.params.product_id}`)
+    .then((results) => {
+      // console.log(results.rows);
+      res.send(transformRelated(results.rows));
+    })
+    .catch((err) => {console.log(err)})
+}
