@@ -26,11 +26,11 @@ export const getProducts = (req: Request, res: Response) => {
     .catch((err) => {console.log(err)})
 }
 
-export const getProduct = (req: Request, res: Response) => {
-  pool.query(`SELECT product.id, product.name, product.slogan, product.description, product.category, product.default_price, features.feature, features.value FROM product INNER JOIN features ON product.id = features.product_id WHERE product.id = ${req.params.id}`)
+export const getSingleProduct = (req: Request, res: Response) => {
+  pool.query(`SELECT product.id, product.name, product.slogan, product.description, product.category, product.default_price, features.feature, features.value FROM product INNER JOIN features ON product.id = features.product_id WHERE product.id = ${req.params.product_id}`)
     .then((results) => {
-      console.log(transformProductRequest(results.rows))
-      res.send(results.rows)
+      const transformedResults = transformProductRequest(results.rows)
+      res.send(transformedResults)
     })
     .catch((err) => {console.log(err)})
 }
@@ -42,7 +42,7 @@ export const getFeatures = (req: Request, res: Response) => {
 }
 
 export const getStyles = (req: Request, res: Response) => {
-  pool.query('SELECT * FROM styles LIMIT 100')
+  pool.query(`SELECT * FROM styles WHERE styles.product_id = ${req.params.product_id}`)
     .then((results) => {res.send(results.rows)})
     .catch((err) => {console.log(err)})
 }

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { getFeatures, getProducts, getSkus, getStyles, getProduct } from './queries'
+import { getFeatures, getProducts, getSkus, getStyles, getSingleProduct } from './queries'
 
 dotenv.config();
 
@@ -14,12 +14,16 @@ app.get('/', (req:Request, res:Response) => {
   res.send('Testing')
 });
 
+app.get('/products/:product_id', getSingleProduct);
 
-app.get('/product/:id', getProduct)
 app.get('/products', getProducts);
+
 app.get('/skus', getSkus);
+
 app.get('/features', getFeatures);
-app.get('/styles', getStyles);
+
+app.get('/products/:product_id/styles', getStyles)
+
 
 
 
