@@ -14,8 +14,8 @@ const csvData = [];
 const csvStream = fastcsv
   .parse()
   .on("error", (err) => {console.log(err)})
-  .on("data", function(data) {
-    csvData.push(data)
+  .on("data", function() {
+    csvData.push()
   })
   .on("end", function() {
     csvData.shift();
