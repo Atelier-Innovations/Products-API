@@ -13,6 +13,7 @@ const dbPW = process.env.dbPW;
 const dbPORT = process.env.dbPORT
 
 
+
 const pool = new Pool ({
   user: 'bryce',
   host: 'localhost',
@@ -34,6 +35,7 @@ pool.connect((err, client, done) => {
 
   productsStream.pipe(streamProducts).on('finish', done).on('error', done);
 })
+
 
 
 
