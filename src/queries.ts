@@ -18,7 +18,17 @@ const pool = new Pool({
 })
 
 export const getProducts = (req: Request, res: Response) => {
-  pool.query('SELECT * FROM product LIMIT 2')
+  if (!req.params.page) {
+    req.params.page = '1'
+  }
+
+  if (!req.params.count) {
+    req.params.count = '5';
+  }
+
+  const pageNumber = (Number(req.params.page) * Number(req.params.count)).toString()
+
+  pool.query(`SELECT * FROM product WHERE id >= ${pageNumber} ORDER BY id LIMIT ${req.params.count}`)
     .then((results) => {
       console.log(results.rows)
       res.send(results.rows)
@@ -46,15 +56,14 @@ export const getStyles = (req: Request, res: Response) => {
     .then((query1) => {
       pool.query(`SELECT * FROM styles INNER JOIN skus ON styles.id = skus.styles_id WHERE styles.product_id = ${req.params.product_id}`)
         .then((query2) => {
-          const result = []
-          result.push(query1.rows)
-          result.push(query2.rows)
-          // console.log(result)
-          res.send(transformStylesRequest(result))
+          const result = [];
+          result.push(query1.rows);
+          result.push(query2.rows);
+          res.send(transformStylesRequest(result));
         })
-        .catch((err) => {console.log(err)})
+        .catch((err) => {console.log(err)});
     })
-    .catch((err) => {console.log(err)})
+    .catch((err) => {console.log(err)});
 }
 
 export const getSkus = (req: Request, res: Response) => {

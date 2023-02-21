@@ -8,12 +8,16 @@ export const transformProductRequest = (rows) => {
   product.feature = features;
   delete product.value;
   return product;
-}
+};
+
+
+
+
 
 export const transformStylesRequest = (rows) => {
   const stylesAndPhotos = rows[0];
   const stylesAndSkus = rows[1];
-  // console.log(stylesAndSkus[0])
+  console.log(stylesAndSkus[0])
   const styles = {
     "product_id": stylesAndSkus[0].product_id,
     "results": []
@@ -61,7 +65,9 @@ export const transformStylesRequest = (rows) => {
 
   // console.log('stylesAndSkus', styles);
   return styles;
-}
+};
+
+
 
 
 export const transformRelated = (rows) => {
@@ -70,4 +76,5 @@ export const transformRelated = (rows) => {
     related.push(rows[i].related_product_id)
   }
   return related;
-}
+};
+
