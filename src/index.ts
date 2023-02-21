@@ -26,7 +26,10 @@ app.get('/products/:product_id/related', getRelatedProducts)
 app.get('/loaderio-942522511193efbb37a0c6c6c258ecbe.txt', (req, res) => {
   res.sendFile('loaderio-942522511193efbb37a0c6c6c258ecbe.txt', {root: './src'})
 })
+
 app.get('/products/:page/:count', getProducts);
+
+app.get('/products', getProducts);
 
 
 

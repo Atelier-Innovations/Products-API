@@ -23,9 +23,9 @@ const pool = new Pool ({
 
 pool.connect((err, client, done) => {
   if (err) throw err;
-  client.query('CREATE TABLE IF NOT EXISTS photos(id INT PRIMARY KEY NOT NULL, styles_id INT, url TEXT, thumbnail_url TEXT, FOREIGN KEY (styles_id) REFERENCES styles(id))')
+  client.query('CREATE TABLE IF NOT EXISTS photos(id INT PRIMARY KEY NOT NULL, styles_id INT, url VARCHAR(300), thumbnail_url VARCHAR(300), FOREIGN KEY (styles_id) REFERENCES styles(id))')
 
-  const streamPhotos = client.query(copyFrom("COPY photos FROM STDIN WITH QUOTE E'\b' NULL AS '' CSV HEADER"));
+  const streamPhotos = client.query(copyFrom("COPY photos FROM STDIN WITH QUOTE E'\b' NULL AS '' ESCAPE '/' CSV HEADER"));
   const photosStream = fs.createReadStream('./csvFiles/photos.csv');
 
   photosStream.on('error', (err) => {console.log('photosStream', err); done});

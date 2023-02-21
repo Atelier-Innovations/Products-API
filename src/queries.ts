@@ -19,7 +19,9 @@ const pool = new Pool({
 
 export const getProducts = (req: Request, res: Response) => {
   if (!req.params.page) {
-    req.params.page = '1'
+    req.params.page = '0'
+  } else {
+    req.params.page = (Number(req.params.page) - 1).toString()
   }
 
   if (!req.params.count) {

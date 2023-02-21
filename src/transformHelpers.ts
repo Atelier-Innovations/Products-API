@@ -19,7 +19,7 @@ export const transformStylesRequest = (rows) => {
   const stylesAndSkus = rows[1];
   console.log(stylesAndSkus[0])
   const styles = {
-    "product_id": stylesAndSkus[0].product_id,
+    "product_id": Number(stylesAndSkus[0].product_id),
     "results": []
   };
 
@@ -31,7 +31,7 @@ export const transformStylesRequest = (rows) => {
       styles.results.push({
         "style_id": stylesAndSkus[i].styles_id,
         "name": stylesAndSkus[i].name,
-        "original_price": stylesAndSkus[i].original_price,
+        "original_price": stylesAndSkus[i].original_price + '.00',
         "sale_price": stylesAndSkus[i].sale_price,
         "default?": !!stylesAndSkus[i].default_style,
         "photos": [],
@@ -44,7 +44,7 @@ export const transformStylesRequest = (rows) => {
     for (let k = 0; k < styles.results.length; k++) {
       if (styles.results[k].style_id === stylesAndSkus[i].styles_id) {
         styles.results[k].skus[stylesAndSkus[i].id] = {
-          "quantity": stylesAndSkus[i].quantity,
+          "quantity": Number(stylesAndSkus[i].quantity),
           "size": stylesAndSkus[i].size
         }
       }
@@ -54,9 +54,11 @@ export const transformStylesRequest = (rows) => {
   for (let i = 0; i < stylesAndPhotos.length; i++) {
     for (let k = 0; k < styles.results.length; k++) {
       if (styles.results[k].style_id === stylesAndPhotos[i].styles_id) {
+        const urlWithoutQuotes = stylesAndPhotos[i].url.slice(1, (stylesAndPhotos[i].url.length - 1))
+        const thumbnailWithoutQuotes = stylesAndPhotos[i].thumbnail_url.slice(1, (stylesAndPhotos[i].thumbnail_url.length - 1))
         styles.results[k].photos.push({
-          "thumbnail_url": stylesAndPhotos[i].thumbnail_url,
-          "url": stylesAndPhotos[i].url
+          "thumbnail_url": thumbnailWithoutQuotes,
+          "url": urlWithoutQuotes
         })
       }
     }

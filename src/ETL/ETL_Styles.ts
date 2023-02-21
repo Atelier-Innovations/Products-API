@@ -24,7 +24,7 @@ const pool = new Pool ({
 pool.connect((err, client, done) => {
   if (err) throw err;
   client.query('CREATE TABLE IF NOT EXISTS styles(id INT PRIMARY KEY NOT NULL, product_id INT, name VARCHAR(30), sale_price VARCHAR(15), original_price VARCHAR(15), default_style INT, FOREIGN KEY (product_id) REFERENCES product(id))')
-  const streamStyles = client.query(copyFrom('COPY styles FROM STDIN CSV HEADER'));
+  const streamStyles = client.query(copyFrom(`COPY styles FROM STDIN CSV HEADER NULL AS 'null'`));
   const stylesStream = fs.createReadStream('./csvFiles/styles.csv')
 
   stylesStream.on('error', (err) => {console.log('productsStream', err); done})
