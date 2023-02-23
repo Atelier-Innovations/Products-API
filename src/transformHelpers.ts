@@ -17,7 +17,7 @@ export const transformProductRequest = (rows) => {
 export const transformStylesRequest = (rows) => {
   const stylesAndPhotos = rows[0];
   const stylesAndSkus = rows[1];
-  console.log(stylesAndSkus[0])
+  // console.log(stylesAndSkus[0])
   const styles = {
     "product_id": Number(stylesAndSkus[0].product_id),
     "results": []

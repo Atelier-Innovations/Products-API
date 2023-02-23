@@ -32,7 +32,7 @@ export const getProducts = (req: Request, res: Response) => {
 
   pool.query(`SELECT * FROM product WHERE id >= ${pageNumber} ORDER BY id LIMIT ${req.params.count}`)
     .then((results) => {
-      console.log(results.rows)
+      // console.log(results.rows)
       res.send(results.rows)
     })
     .catch((err) => {console.log(err)})
@@ -61,6 +61,7 @@ export const getStyles = (req: Request, res: Response) => {
           const result = [];
           result.push(query1.rows);
           result.push(query2.rows);
+          // console.log(result)
           res.send(transformStylesRequest(result));
         })
         .catch((err) => {console.log(err)});
