@@ -1,0 +1,7 @@
+need to add these to db
+
+CREATE INDEX styles_product_id_idx ON styles (product_id);
+
+CREATE INDEX photos_styles_id_idx ON photos (styles_id);
+
+CREATE INDEX skus_styles_id_idx ON skus (styles_id);
